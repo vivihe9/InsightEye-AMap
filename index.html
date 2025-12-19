@@ -45,7 +45,7 @@
 
         <div class="control-group">
             <label>📄 商业交付：</label>
-            <button id="btn-export-pdf" style="background: #52c41a; color: white; border-color: #52c41a;">
+            <button id="btn-export-pdf" style="background: #52c41a; color: white; border-color: #52c41a; font-weight: bold;">
                 📥 生成商业计划书 (PDF)
             </button>
         </div>
@@ -54,72 +54,68 @@
             📊 区域锚点: <span id="poi-count" style="color: #006eff; font-weight: bold;">扫描中...</span>
         </div>
     </div>
-    <div id="report-modal" class="modal-overlay">
-    <div class="modal-wrapper">
-        <div class="modal-header-bar">
-            <span class="modal-title">商业价值深度研报</span>
-            <div class="btn-group">
-                <button id="btn-modal-download" class="btn-primary">📥 下载 PDF</button>
-                <button id="btn-modal-close" class="btn-ghost">关闭</button>
-            </div>
-        </div>
-        <div id="report-content" class="report-container">
-            </div>
-    </div>
-</div>
 
+    <div id="report-modal" class="modal-overlay">
+        <div class="modal-wrapper">
+            <div class="modal-header-bar">
+                <span class="modal-title">📈 商业价值深度研报</span>
+                <div class="btn-group">
+                    <button id="btn-modal-download" class="btn-primary">📥 下载 PDF</button>
+                    <button id="btn-modal-close" class="btn-ghost">关闭</button>
+                </div>
+            </div>
 
             <div id="report-content" class="report-container">
                 <div class="report-header">
                     <h1 class="report-title">慧眼 AI · 商业选址可行性研报</h1>
                     <div class="report-meta">
-                        <span>生成日期: <span id="report-date">--</span></span>
+                        <span>生成日期: <span id="report-date">--</span></span> | 
                         <span>分析模型: <span id="report-model">--</span></span>
                     </div>
                 </div>
+
                 <hr style="border: 0; border-top: 2px solid #006eff; margin: 20px 0;">
                 
                 <div class="report-section">
                     <h2>01. 核心结论 (Executive Summary)</h2>
                     <div class="highlight-box">
-                        <div class="score-display">综合评分：<span id="report-score" style="color: #006eff; font-weight: bold;">--</span> 分</div>
-                        <p id="report-summary" style="margin-top: 10px; font-size: 14px;">AI 正在生成分析...</p>
+                        <div class="score-display">综合评分：<span id="report-score" style="color: #006eff; font-weight: bold; font-size: 24px;">--</span> 分</div>
+                        <p id="report-summary" style="margin-top: 10px; font-size: 15px; line-height: 1.6;">AI 正在生成深度商业分析...</p>
                     </div>
                 </div>
 
                 <div class="report-section">
                     <h2>02. 深度数据透视 (Data Insights)</h2>
                     <table class="data-table">
-                        <tr><td>📍 选址坐标</td><td id="report-address">--</td></tr>
-                        <tr><td>🏢 核心锚点资源</td><td id="report-anchor-count">-- 个</td></tr>
+                        <tr><td>📍 选址参考位置</td><td id="report-address">--</td></tr>
+                        <tr><td>🏢 核心锚点资源</td><td id="report-anchor-count">--</td></tr>
                         <tr><td>🏪 建议开设业态</td><td id="report-shops" style="color: #006eff; font-weight: bold;">--</td></tr>
-                        <tr><td>🚇 资源通达度</td><td id="report-distance">--</td></tr>
-                        <tr><td>⚖️ 竞争生存率</td><td>中等 (AI 预测存活率 78%)</td></tr>
+                        <tr><td>🚇 资源通达度(最近)</td><td id="report-distance">--</td></tr>
+                        <tr><td>⚖️ 竞争生存率</td><td>中等偏上 (AI 预测存活率 78%)</td></tr>
                     </table>
                 </div>
 
                 <div class="report-section">
                     <h2>03. 目标客群画像 (User Profile)</h2>
-                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 15px;">
                         <div class="profile-card">
                             <h3>👨‍💻 主力人群</h3>
-                            <p id="profile-people">--</p>
+                            <p id="profile-people" style="font-size: 14px; line-height: 1.5;">--</p>
                         </div>
                         <div class="profile-card">
                             <h3>☕ 消费偏好</h3>
-                            <p id="profile-prefer">--</p>
+                            <p id="profile-prefer" style="font-size: 14px; line-height: 1.5;">--</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="report-footer">Powered by Amap LBS & Generative AI Rules Engine</div>
-                
-                <div style="height: 100px; width: 100%;"></div>
+                <div class="report-footer">
+                    <p>© 2025 慧眼商业智能系统 | Powered by Amap LBS & AI Engine</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-
 </html>
