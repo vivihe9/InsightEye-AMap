@@ -231,22 +231,27 @@ function drawSmartBoundary(AMap, centerPoint, mode) {
 function generateReport() {
     if (!userSelectionMarker) return alert("请先在地图上选点！");
     
-    document.getElementById('report-modal').style.display = 'block';
+    const modal = document.getElementById('report-modal');
+    modal.style.display = 'block';
     document.body.classList.add('modal-open');
     
-    // 数据填充
     const config = STRATEGY_CONFIG[currentMode];
-    document.getElementById('report-date').innerText = new Date().toLocaleDateString();
-    document.getElementById('report-model').innerText = config.label;
+    
+    // 核心：将 JS 变量值赋给 HTML 标签
     document.getElementById('report-score').innerText = currentScore;
-    document.getElementById('report-address').innerText = document.getElementById('container').getAttribute('data-last-address');
-    document.getElementById('report-anchor-count').innerText = document.getElementById('poi-count').innerText;
-    document.getElementById('report-distance').innerText = document.getElementById('container').getAttribute('data-last-distance');
+    document.getElementById('report-model').innerText = config.label;
     document.getElementById('report-shops').innerText = config.shops;
+    document.getElementById('profile-people').innerText = config.people;
+    
+    // 从容器属性中取回之前暂存的地址和距离数据
+    const container = document.getElementById('container');
+    document.getElementById('report-address').innerText = container.getAttribute('data-last-address') || "未知";
+    document.getElementById('report-distance').innerText = container.getAttribute('data-last-distance') || "未计算";
+    document.getElementById('report-anchor-count').innerText = document.getElementById('poi-count').innerText;
 
+    // AI 话术生成
     const ai = generateAIRules(currentMode, currentScore);
     document.getElementById('report-summary').innerText = ai.summary;
-    document.getElementById('profile-people').innerText = ai.people;
     document.getElementById('profile-prefer').innerText = ai.prefer;
     
     document.getElementById('report-content').scrollTop = 0; 
@@ -325,4 +330,5 @@ function updateModeUI(mode) {
     document.getElementById('info-people').innerText = config.people;
     document.getElementById('info-shops').innerText = config.shops;
 }
+
 
