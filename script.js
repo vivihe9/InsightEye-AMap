@@ -283,11 +283,30 @@ function calculateScore(dis) {
 }
 
 function getStatsHTML(mode, score) {
-    const labels = ["流量指数", "竞争压力", "消费能力", "配套成熟", "配套潜力"];
+    // 定义不同模式下的专业维度
+    const indicatorsMap = {
+        'business': ['商务氛围', '消费能级', '交通通达', '品牌级次', '租金回报'],
+        'traffic': ['客流规模', '极速通达', '翻台潜力', '竞争蓝海', '租金友好'],
+        'community': ['居住密度', '生活粘性', '复购潜力', '全龄覆盖', '竞争温和']
+    };
+    const labels = indicatorsMap[mode] || ["流量指数", "竞争压力", "消费能力", "配套成熟", "配套潜力"];
+    
     let html = '';
-    labels.forEach(l => {
-        const val = Math.max(20, score - Math.random() * 20);
-        html += `<div style="font-size:11px; margin-top:4px;">${l}: ${val.toFixed(0)}%</div>`;
+    labels.forEach((label, index) => {
+        // 根据总分生成有差异的维度分 (模拟 AI 计算)
+        const val = Math.max(30, Math.min(95, score - (Math.random() * 15)));
+        const color = val > 80 ? '#52c41a' : (val > 60 ? '#1890ff' : '#faad14');
+        
+        html += `
+            <div style="margin-bottom:6px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#666;">
+                    <span>${label}</span>
+                    <span>${val.toFixed(0)}%</span>
+                </div>
+                <div style="width:100%; height:4px; background:#eee; border-radius:2px; margin-top:2px;">
+                    <div style="width:${val}%; height:100%; background:${color}; border-radius:2px;"></div>
+                </div>
+            </div>`;
     });
     return html;
 }
@@ -306,3 +325,4 @@ function updateModeUI(mode) {
     document.getElementById('info-people').innerText = config.people;
     document.getElementById('info-shops').innerText = config.shops;
 }
+
