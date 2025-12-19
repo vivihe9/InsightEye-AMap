@@ -269,28 +269,21 @@ function drawSmartBoundary(AMap, centerPoint, mode) {
 function generateReport() {
     if (!userSelectionMarker) return alert("请先在地图上选点！");
     
-    // 1. 显示 Modal
+    // 1. 显示弹窗
     const modal = document.getElementById('report-modal');
-    modal.style.display = 'flex';
+    modal.style.display = 'block'; // 配合 CSS 的非 flex 布局使用 block
     
-    // 2. 确保 Modal 内容区可以滚动（修复浏览问题）
-    const content = document.getElementById('report-content');
-    content.scrollTop = 0; // 每次打开回到顶部
-
-    // 3. 填充数据
-    document.getElementById('report-date').innerText = new Date().toLocaleDateString();
-    document.getElementById('report-model').innerText = STRATEGY_CONFIG[currentMode].label;
-    document.getElementById('report-score').innerText = currentScore;
-    document.getElementById('report-address').innerText = document.getElementById('container').getAttribute('data-last-address');
-    document.getElementById('report-anchor-count').innerText = document.getElementById('poi-count').innerText;
-    document.getElementById('report-distance').innerText = document.getElementById('container').getAttribute('data-last-distance');
+    // 2. 🟢 暴力禁用 body 滚动，防止滑动冲突
+    document.body.classList.add('modal-open');
     
-    const ai = generateAIRules(currentMode, currentScore);
-    document.getElementById('report-summary').innerText = ai.summary;
+    // ... 你的其他数据填充逻辑 ...
+    document.getElementById('report-content').scrollTop = 0; 
 }
 
 function closeModal() { 
     document.getElementById('report-modal').style.display = 'none'; 
+    // 3. 🟢 恢复 body 滚动
+    document.body.classList.remove('modal-open');
 }
 
 // 评分与建议函数保持原样...
@@ -299,3 +292,4 @@ function getStatsHTML(mode, score) { /* ...你的代码... */ }
 function generateAIRules(mode, score) { /* ...你的代码... */ }
 function downloadPDF() { /* ...使用 html2pdf ... */ }
 function updateModeUI(mode) { /* ...你的代码... */ }
+
