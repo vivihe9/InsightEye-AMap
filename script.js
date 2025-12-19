@@ -2,7 +2,7 @@
 // 🔐 1. 安全配置
 // ==========================================================
 window._AMapSecurityConfig = {
-    securityJsCode: 'YOUR_SECURITY_JS_CODE', 
+    securityJsCode: 'e7d06608abad514618c7b3c2d63d12c2', 
 };
 
 // ==========================================================
@@ -47,7 +47,7 @@ const STRATEGY_CONFIG = {
 // 🛠️ 3. 初始化地图
 // ==========================================================
 AMapLoader.load({
-    key: 'YOUR_AMAP_KEY', 
+    key: 'fc33a935ba8de6c6e5c573419d0d386e', 
     version: "2.0",
     plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.ControlBar', 'AMap.PlaceSearch', 'AMap.GeometryUtil', 'AMap.Geocoder', 'AMap.Polyline', 'AMap.Polygon', 'AMap.Marker', 'AMap.Circle']
 }).then((AMap) => {
@@ -382,4 +382,5 @@ function generateAIRules(mode, score) {
     
     people = STRATEGY_CONFIG[mode].people;
     return { summary, people, prefer };
+
 }
