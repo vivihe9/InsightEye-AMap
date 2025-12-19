@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慧眼AI · 商业智能选址助手 (Final Pro)</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://webapi.amap.com/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <div id="container"></div>
+
+    <div id="control-panel">
+        <div class="panel-header">⚡ 慧眼·商业指挥室</div>
+        
+        <div class="control-group">
+            <label>🧠 锚点推演模式：</label>
+            <select id="mode-selector">
+                <option value="business">💎 模式一：商务精英流 (High-End)</option>
+                <option value="traffic">🔥 模式二：下沉性价比流 (Budget)</option>
+                <option value="community">🏠 模式三：社区生活流 (Community)</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <div id="mode-info-box" class="info-card">
+                <div class="info-item">
+                    <span class="info-icon">👥</span>
+                    <div class="info-content">
+                        <div class="info-label">目标客群</div>
+                        <div id="info-people" class="info-value">--</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">🏪</span>
+                    <div class="info-content">
+                        <div class="info-label">适用店铺</div>
+                        <div id="info-shops" class="info-value">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>📄 商业交付：</label>
+            <button id="btn-export-pdf" style="background: #52c41a; color: white; border-color: #52c41a;">
+                📥 生成商业计划书 (PDF)
+            </button>
+        </div>
+
+        <div class="status-bar">
+            📊 区域锚点: <span id="poi-count" style="color: #006eff; font-weight: bold;">扫描中...</span>
+        </div>
+    </div>
+
+    <div id="report-modal" class="modal-overlay">
+        <div class="modal-wrapper">
+            <div class="modal-header-bar">
+                <span class="modal-title">✨ 商业计划书预览</span>
+                <div class="modal-actions">
+                    <button id="btn-modal-close" class="btn-ghost">关闭</button>
+                    <button id="btn-modal-download" class="btn-primary">📥 下载 PDF 文件</button>
+                </div>
+            </div>
+
+            <div id="report-content" class="report-container">
+                <div class="report-header">
+                    <h1 class="report-title">慧眼 AI · 商业选址可行性研报</h1>
+                    <div class="report-meta">
+                        <span>生成日期: <span id="report-date">--</span></span>
+                        <span>分析模型: <span id="report-model">--</span></span>
+                    </div>
+                </div>
+                <hr style="border: 0; border-top: 2px solid #006eff; margin: 20px 0;">
+                
+                <div class="report-section">
+                    <h2>01. 核心结论 (Executive Summary)</h2>
+                    <div class="highlight-box">
+                        <div class="score-display">综合评分：<span id="report-score" style="color: #006eff; font-weight: bold;">--</span> 分</div>
+                        <p id="report-summary" style="margin-top: 10px; font-size: 14px;">AI 正在生成分析...</p>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h2>02. 深度数据透视 (Data Insights)</h2>
+                    <table class="data-table">
+                        <tr><td>📍 选址坐标</td><td id="report-address">--</td></tr>
+                        <tr><td>🏢 核心锚点资源</td><td id="report-anchor-count">-- 个</td></tr>
+                        <tr><td>🏪 建议开设业态</td><td id="report-shops" style="color: #006eff; font-weight: bold;">--</td></tr>
+                        <tr><td>🚇 资源通达度</td><td id="report-distance">--</td></tr>
+                        <tr><td>⚖️ 竞争生存率</td><td>中等 (AI 预测存活率 78%)</td></tr>
+                    </table>
+                </div>
+
+                <div class="report-section">
+                    <h2>03. 目标客群画像 (User Profile)</h2>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <div class="profile-card">
+                            <h3>👨‍💻 主力人群</h3>
+                            <p id="profile-people">--</p>
+                        </div>
+                        <div class="profile-card">
+                            <h3>☕ 消费偏好</h3>
+                            <p id="profile-prefer">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-footer">Powered by Amap LBS & Generative AI Rules Engine</div>
+                
+                <div style="height: 100px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

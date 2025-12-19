@@ -1,0 +1,75 @@
+/* ==========================================================
+   1. 全局样式重置
+   ========================================================== */
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; }
+#container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
+
+/* ==========================================================
+   2. 控制面板 (左上角)
+   ========================================================== */
+#control-panel { position: absolute; top: 20px; left: 20px; width: 280px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); z-index: 999; }
+.panel-header { font-size: 18px; font-weight: 800; color: #1f1f1f; margin-bottom: 20px; border-bottom: 2px solid #006eff; padding-bottom: 12px; }
+.control-group { margin-bottom: 15px; }
+.control-group label { display: block; font-size: 13px; font-weight: 600; color: #595959; margin-bottom: 8px; }
+
+/* 控件元素 */
+select, button { width: 100%; padding: 10px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; outline: none; cursor: pointer; transition: all 0.3s; }
+button:hover, select:hover { border-color: #006eff; color: #006eff; }
+.status-bar { font-size: 12px; color: #666; background: #f5f7fa; padding: 10px; border-radius: 6px; text-align: center; margin-top: 10px; }
+
+/* 情报卡片 */
+.info-card { background: rgba(240,247,255,0.5); border: 1px solid #adc6ff; border-radius: 8px; padding: 10px; }
+.info-item { display: flex; margin-bottom: 8px; } .info-item:last-child { margin-bottom: 0; }
+.info-icon { font-size: 16px; margin-right: 8px; }
+.info-label { font-size: 11px; color: #888; font-weight: 600; }
+.info-value { font-size: 12px; color: #333; font-weight: 500; }
+
+/* ==========================================================
+   3. 地图覆盖物样式
+   ========================================================== */
+.anchor-label { background: rgba(255,255,255,0.9); border: 1px solid #006eff; border-radius: 4px; padding: 2px 5px; font-size: 10px; color: #006eff; font-weight: bold; transform: translateY(-5px); white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+.amap-marker-label { border: none !important; background: transparent !important; }
+
+/* 信息窗体自定义 */
+.amap-info-content { border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); padding: 0; border: none; }
+.amap-info-close { right: 8px !important; top: 8px !important; color: #999 !important; font-size: 14px !important; }
+
+/* ==========================================================
+   4. 弹窗与研报 (修复了背景透明问题)
+   ========================================================== */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; overflow-y: auto; padding: 40px 0; }
+
+/* 🟢 核心修复：给 wrapper 加上白色背景和圆角 */
+.modal-wrapper { 
+    width: 700px; 
+    background: #fff; /* 修复背景透明 */
+    border-radius: 12px; /* 添加圆角 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* 添加阴影 */
+    overflow: hidden; /* 确保子元素不溢出圆角 */
+    animation: zoomIn 0.3s ease-out; 
+}
+@keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.modal-header-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; background: #fff; }
+.modal-title { font-weight: bold; font-size: 16px; }
+.btn-primary { background: #006eff; color: white; width: auto; padding: 6px 15px; } .btn-ghost { background: #f5f5f5; color: #666; width: auto; padding: 6px 15px; }
+
+/* 研报内容区 */
+.report-container { 
+    min-height: 900px; 
+    
+    padding: 40px 40px 120px 40px; 
+    
+    color: #333; 
+    font-family: Helvetica, Arial, sans-serif; 
+    background: #fff; 
+}
+.report-title { font-size: 24px; font-weight: 800; margin: 0; } .report-meta { font-size: 12px; color: #999; margin-top: 5px; }
+.report-section h2 { font-size: 16px; color: #006eff; border-left: 4px solid #006eff; padding-left: 10px; margin-bottom: 15px; margin-top: 30px; }
+.highlight-box { background: #f0f7ff; padding: 15px; border-radius: 8px; border: 1px solid #d6e4ff; }
+.score-display { font-size: 16px; font-weight: bold; }
+.data-table { width: 100%; border-collapse: collapse; } .data-table td { padding: 12px 5px; border-bottom: 1px solid #eee; font-size: 14px; }
+.data-table td:first-child { color: #666; width: 140px; } .data-table td:last-child { font-weight: bold; }
+.profile-card { width: 48%; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; } .profile-card h3 { margin: 0 0 8px 0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px; color: #006eff; }
+.report-footer { margin-top: 50px; text-align: center; font-size: 10px; color: #ccc; border-top: 1px solid #eee; padding-top: 20px; }
