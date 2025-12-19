@@ -1,23 +1,30 @@
 /* ==========================================================
    1. 全局样式重置
    ========================================================== */
-* { box-sizing: border-box; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
 html, body { 
     width: 100%; 
     height: 100%; 
-    margin: 0; 
-    padding: 0; 
     overflow: hidden; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    background: #f0f2f5; 
+    background: #f0f2f5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 解决滑动冲突的核心：当弹窗开启时禁用底图滚动 */
-body.modal-open {
-    overflow: hidden !important;
+#container { 
+    width: 100%; 
+    height: 100%; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    z-index: 1; 
 }
-
-#container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
 
 /* ==========================================================
    2. 控制面板 (左上角)
@@ -26,37 +33,183 @@ body.modal-open {
     position: absolute; 
     top: 20px; 
     left: 20px; 
-    width: 300px; 
+    width: 280px; 
     background: rgba(255,255,255,0.95); 
     backdrop-filter: blur(10px); 
     padding: 20px; 
     border-radius: 12px; 
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15); 
-    z-index: 999; 
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+    z-index: 999;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
-.panel-header { font-size: 18px; font-weight: 800; color: #1f1f1f; margin-bottom: 20px; border-bottom: 2px solid #006eff; padding-bottom: 12px; }
-.control-group { margin-bottom: 15px; }
-.control-group label { display: block; font-size: 13px; font-weight: 600; color: #595959; margin-bottom: 8px; }
 
-select, button { width: 100%; padding: 12px; border: 1px solid #d9d9d9; border-radius: 8px; background: #fff; outline: none; cursor: pointer; transition: all 0.3s; font-size: 14px; }
-button:hover { filter: brightness(0.9); }
+/* 移动端控制面板适配 */
+@media (max-width: 768px) {
+    #control-panel {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: calc(100vw - 20px);
+        padding: 15px;
+        max-height: calc(100vh - 20px);
+    }
+}
 
-.info-card { background: #f0f7ff; border: 1px solid #adc6ff; border-radius: 8px; padding: 12px; }
-.info-item { display: flex; align-items: center; margin-bottom: 10px; }
-.info-item:last-child { margin-bottom: 0; }
-.info-icon { font-size: 20px; margin-right: 12px; }
-.info-label { font-size: 11px; color: #888; text-transform: uppercase; }
-.info-value { font-size: 13px; color: #333; font-weight: 600; }
-.status-bar { font-size: 12px; color: #666; background: #f5f7fa; padding: 10px; border-radius: 6px; text-align: center; margin-top: 15px; }
+@media (max-width: 480px) {
+    #control-panel {
+        padding: 12px;
+    }
+}
+
+.panel-header { 
+    font-size: 18px; 
+    font-weight: 800; 
+    color: #1f1f1f; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #006eff; 
+    padding-bottom: 12px; 
+}
+
+@media (max-width: 480px) {
+    .panel-header {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+}
+
+.control-group { 
+    margin-bottom: 15px; 
+}
+
+.control-group label { 
+    display: block; 
+    font-size: 13px; 
+    font-weight: 600; 
+    color: #595959; 
+    margin-bottom: 8px; 
+}
+
+/* 控件元素 */
+select, button { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #d9d9d9; 
+    border-radius: 6px; 
+    background: #fff; 
+    outline: none; 
+    cursor: pointer; 
+    transition: all 0.3s;
+    font-size: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+button:hover, select:hover { 
+    border-color: #006eff; 
+    color: #006eff; 
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+    select, button {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
+.status-bar { 
+    font-size: 12px; 
+    color: #666; 
+    background: #f5f7fa; 
+    padding: 10px; 
+    border-radius: 6px; 
+    text-align: center; 
+    margin-top: 10px; 
+}
+
+/* 情报卡片 */
+.info-card { 
+    background: rgba(240,247,255,0.5); 
+    border: 1px solid #adc6ff; 
+    border-radius: 8px; 
+    padding: 10px; 
+}
+
+.info-item { 
+    display: flex; 
+    margin-bottom: 8px; 
+}
+
+.info-item:last-child { 
+    margin-bottom: 0; 
+}
+
+.info-icon { 
+    font-size: 16px; 
+    margin-right: 8px; 
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex: 1;
+}
+
+.info-label { 
+    font-size: 11px; 
+    color: #888; 
+    font-weight: 600; 
+}
+
+.info-value { 
+    font-size: 12px; 
+    color: #333; 
+    font-weight: 500; 
+    word-break: break-word;
+}
 
 /* ==========================================================
    3. 地图覆盖物样式
    ========================================================== */
-.anchor-label { background: white; border: 1px solid #006eff; border-radius: 4px; padding: 2px 6px; font-size: 11px; color: #006eff; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.amap-marker-label { border: none !important; background: transparent !important; }
+.anchor-label { 
+    background: rgba(255,255,255,0.9); 
+    border: 1px solid #006eff; 
+    border-radius: 4px; 
+    padding: 2px 5px; 
+    font-size: 10px; 
+    color: #006eff; 
+    font-weight: bold; 
+    white-space: nowrap; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+}
+
+.amap-marker-label { 
+    border: none !important; 
+    background: transparent !important; 
+}
+
+/* 信息窗体自定义 */
+.amap-info-content { 
+    border-radius: 8px; 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15); 
+    padding: 0; 
+    border: none; 
+}
+
+.amap-info-close { 
+    right: 8px !important; 
+    top: 8px !important; 
+    color: #999 !important; 
+    font-size: 14px !important; 
+}
 
 /* ==========================================================
-   4. 弹窗与研报 (滚动修复核心)
+   4. 弹窗与研报 (核心修复)
    ========================================================== */
 .modal-overlay { 
     display: none; 
@@ -65,85 +218,393 @@ button:hover { filter: brightness(0.9); }
     left: 0; 
     width: 100%; 
     height: 100%; 
-    background: rgba(0,0,0,0.8); 
+    background: rgba(0,0,0,0.7); 
     backdrop-filter: blur(5px); 
-    z-index: 10000; /* 必须高于面板 */
-    overflow-x: hidden;
-    overflow-y: auto; /* 允许纵向滚动 */
-    -webkit-overflow-scrolling: touch; 
+    z-index: 2000; 
+    overflow-y: auto; /* 允许整体滚动 - 核心修复 */
+    -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+    padding: 0; /* 移除内边距，让内容完全控制 */
 }
 
 .modal-wrapper { 
-    position: relative;
-    width: 750px; 
-    margin: 50px auto; 
-    background: #ffffff; 
-    border-radius: 16px; 
-    box-shadow: 0 24px 64px rgba(0,0,0,0.4); 
-    overflow: hidden; 
-    animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto; /* 上下留白，支持滚动 */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: zoomIn 0.3s ease-out;
+    min-height: auto; /* 让内容自然撑开 */
 }
 
-@keyframes slideUp { 
-    from { transform: translateY(40px); opacity: 0; } 
-    to { transform: translateY(0); opacity: 1; } 
+@media (max-width: 768px) {
+    .modal-wrapper {
+        width: 95%;
+        margin: 20px auto 20px auto; /* 移动端更小的边距 */
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-wrapper {
+        width: 98%;
+        margin: 10px auto 10px auto;
+        border-radius: 8px;
+    }
+}
+
+@keyframes zoomIn { 
+    from { 
+        transform: scale(0.9); 
+        opacity: 0; 
+    } 
+    to { 
+        transform: scale(1); 
+        opacity: 1; 
+    } 
 }
 
 .modal-header-bar { 
-    position: sticky; 
-    top: 0; 
-    background: #fff; 
-    padding: 15px 25px; 
+    padding: 15px 20px; 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
     border-bottom: 1px solid #eee; 
-    z-index: 11;
+    background: #fff;
+    position: sticky; /* 粘性定位，滚动时保持在顶部 */
+    top: 0;
+    z-index: 10;
 }
 
-.modal-title { font-weight: 800; color: #333; }
-.btn-primary { background: #006eff; color: white; border: none; width: auto; padding: 8px 20px; }
-.btn-ghost { background: #f0f0f0; color: #666; border: none; width: auto; padding: 8px 20px; }
+@media (max-width: 768px) {
+    .modal-header-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 15px;
+    }
+}
 
-/* 研报容器 */
+.modal-title { 
+    font-weight: bold; 
+    font-size: 16px; 
+}
+
+@media (max-width: 480px) {
+    .modal-title {
+        font-size: 14px;
+    }
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .modal-actions {
+        width: 100%;
+    }
+    
+    .modal-actions button {
+        flex: 1;
+    }
+}
+
+.btn-primary { 
+    background: #006eff; 
+    color: white; 
+    width: auto; 
+    padding: 6px 15px;
+    border: none;
+    white-space: nowrap;
+}
+
+.btn-ghost { 
+    background: #f5f5f5; 
+    color: #666; 
+    width: auto; 
+    padding: 6px 15px;
+    border: 1px solid #d9d9d9;
+}
+
+@media (max-width: 480px) {
+    .btn-primary, .btn-ghost {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+}
+
+/* 报告容器 */
 .report-container { 
-    padding: 50px 60px; 
-    background: #fff; 
-    line-height: 1.6;
+    padding: 40px;
+    color: #333; 
+    font-family: Helvetica, Arial, sans-serif; 
+    background: #fff;
+    overflow: visible; /* 确保内容可见 */
 }
 
-.report-title { font-size: 28px; font-weight: 800; color: #1a1a1a; margin-bottom: 10px; }
-.report-meta { font-size: 13px; color: #8c8c8c; margin-bottom: 20px; }
-.report-section h2 { font-size: 18px; color: #006eff; border-left: 5px solid #006eff; padding-left: 15px; margin: 40px 0 20px 0; }
+@media (max-width: 768px) {
+    .report-container {
+        padding: 25px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-container {
+        padding: 20px 15px;
+    }
+}
+
+.report-header {
+    margin-bottom: 20px;
+}
+
+.report-title { 
+    font-size: 24px; 
+    font-weight: 800; 
+    margin: 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .report-title {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-title {
+        font-size: 18px;
+    }
+}
+
+.report-meta { 
+    font-size: 12px; 
+    color: #999; 
+    margin-top: 8px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .report-meta {
+        font-size: 11px;
+        gap: 10px;
+    }
+}
+
+.report-section {
+    margin-bottom: 30px;
+}
+
+@media (max-width: 480px) {
+    .report-section {
+        margin-bottom: 25px;
+    }
+}
+
+.report-section h2 { 
+    font-size: 16px; 
+    color: #006eff; 
+    border-left: 4px solid #006eff; 
+    padding-left: 10px; 
+    margin-bottom: 15px;
+}
+
+@media (max-width: 480px) {
+    .report-section h2 {
+        font-size: 15px;
+    }
+}
 
 .highlight-box { 
     background: #f0f7ff; 
-    padding: 25px; 
-    border-radius: 12px; 
+    padding: 15px; 
+    border-radius: 8px; 
     border: 1px solid #d6e4ff; 
-    margin: 20px 0;
 }
-.score-display { font-size: 18px; font-weight: 700; color: #333; }
 
-.data-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-.data-table td { padding: 15px 10px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-.data-table td:first-child { color: #8c8c8c; width: 160px; }
-.data-table td:last-child { font-weight: 600; color: #262626; }
+@media (max-width: 480px) {
+    .highlight-box {
+        padding: 12px;
+    }
+}
+
+.score-display { 
+    font-size: 16px; 
+    font-weight: bold; 
+}
+
+@media (max-width: 480px) {
+    .score-display {
+        font-size: 14px;
+    }
+}
+
+.data-table { 
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+.data-table td { 
+    padding: 12px 5px; 
+    border-bottom: 1px solid #eee; 
+    font-size: 14px;
+    vertical-align: top;
+}
+
+@media (max-width: 768px) {
+    .data-table td {
+        padding: 10px 5px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-table td {
+        padding: 8px 3px;
+        font-size: 12px;
+    }
+}
+
+.data-table td:first-child { 
+    color: #666; 
+    width: 140px;
+}
+
+@media (max-width: 768px) {
+    .data-table td:first-child {
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-table td:first-child {
+        width: 80px;
+    }
+}
+
+.data-table td:last-child { 
+    font-weight: bold; 
+}
+
+.profile-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .profile-section {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
 
 .profile-card { 
-    flex: 1; 
-    background: #fafafa; 
-    padding: 20px; 
-    border-radius: 10px; 
-    border: 1px solid #f0f0f0; 
+    flex: 1;
+    background: #f9f9f9; 
+    padding: 15px; 
+    border-radius: 8px; 
+    border: 1px solid #eee;
 }
-.profile-card h3 { margin-top: 0; font-size: 15px; color: #006eff; margin-bottom: 10px; }
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 12px;
+    }
+}
+
+.profile-card h3 { 
+    margin: 0 0 8px 0; 
+    font-size: 14px; 
+    border-bottom: 1px solid #ddd; 
+    padding-bottom: 5px; 
+    color: #006eff; 
+}
+
+@media (max-width: 480px) {
+    .profile-card h3 {
+        font-size: 13px;
+    }
+}
+
+.profile-card p {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+    .profile-card p {
+        font-size: 12px;
+    }
+}
 
 .report-footer { 
-    margin-top: 60px; 
-    padding-top: 20px; 
-    border-top: 1px solid #eee; 
+    margin-top: 50px; 
     text-align: center; 
-    font-size: 12px; 
-    color: #bfbfbf; 
+    font-size: 10px; 
+    color: #ccc; 
+    border-top: 1px solid #eee; 
+    padding-top: 20px;
+    padding-bottom: 20px; /* 确保底部有足够空间 */
+}
+
+@media (max-width: 480px) {
+    .report-footer {
+        margin-top: 30px;
+        font-size: 9px;
+    }
+}
+
+/* 统计条样式 */
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+.stat-row span:first-child {
+    width: 60px;
+    color: #555;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .stat-row span:first-child {
+        width: 50px;
+        font-size: 11px;
+    }
+}
+
+.stat-bar-container {
+    flex: 1;
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    margin: 0 8px;
+    overflow: hidden;
+}
+
+.stat-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.stat-value {
+    width: 30px;
+    text-align: right;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .stat-value {
+        width: 25px;
+        font-size: 11px;
+    }
 }
