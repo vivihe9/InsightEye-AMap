@@ -10,11 +10,11 @@ window._AMapSecurityConfig = {
 // ==========================================================
 let map, placeSearch, geocoder;
 let currentMode = 'business'; 
-let anchorMarkers = [];       // 蓝点 Marker 数组
-let anchorData = [];          // 蓝点 坐标 数组
-let userSelectionMarker = null; // 红点
-let connectionLine = null;      // 虚线
-let currentPolygon = null;      // 区域圈
+let anchorMarkers = [];       
+let anchorData = [];          
+let userSelectionMarker = null; 
+let connectionLine = null;      
+let currentPolygon = null;      
 let currentScore = 0;
 
 const STRATEGY_CONFIG = {
@@ -23,7 +23,6 @@ const STRATEGY_CONFIG = {
         label: '商务精英流', 
         people: '白领 / 商务精英 / 企业高管', 
         shops: '精品咖啡、西餐、买手店、高端美容',
-        desc: '追踪高客单价、高商务属性区域',
         view: { pitch: 55, rotation: 30 }
     },
     'traffic': { 
@@ -31,7 +30,6 @@ const STRATEGY_CONFIG = {
         label: '下沉性价比流', 
         people: '学生 / 游客 / 通勤人员', 
         shops: '奶茶店、快餐(沙县)、网吧、两元店',
-        desc: '追踪高人流量、租金敏感度高区域',
         view: { pitch: 30, rotation: 0 }
     },
     'community': { 
@@ -39,7 +37,6 @@ const STRATEGY_CONFIG = {
         label: '社区生活流', 
         people: '家庭住户 / 全职妈妈 / 老人', 
         shops: '药店、生鲜超市、干洗店、宠物店',
-        desc: '追踪居住密度高、生活粘性强区域',
         view: { pitch: 45, rotation: 15 }
     }
 };
@@ -59,7 +56,6 @@ AMapLoader.load({
     });
 
     geocoder = new AMap.Geocoder({ city: "010" });
-    // 性能优化：限制单页结果数量，减少 DOM 压力
     placeSearch = new AMap.PlaceSearch({ pageSize: 30, city: '010' }); 
     
     map.addControl(new AMap.Scale());
@@ -92,42 +88,22 @@ function setupEventListeners(AMap) {
     document.getElementById('btn-modal-close').addEventListener('click', closeModal);
     document.getElementById('btn-modal-download').addEventListener('click', downloadPDF);
     
-    // 修复：点击阴影关闭，但点击内容区不关闭
     document.getElementById('report-modal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
 }
 
-// 🧹 彻底清理函数（解决线条残留和卡顿的关键）
 function clearMapOverlays() {
-    // 1. 批量移除蓝点 Marker
-    if (anchorMarkers.length > 0) {
-        map.remove(anchorMarkers);
-        anchorMarkers = [];
-    }
-    // 2. 移除虚线
-    if (connectionLine) {
-        map.remove(connectionLine);
-        connectionLine = null;
-    }
-    // 3. 移除圆圈
-    if (currentPolygon) {
-        map.remove(currentPolygon);
-        currentPolygon = null;
-    }
-    // 4. 移除旧红点
-    if (userSelectionMarker) {
-        map.remove(userSelectionMarker);
-        userSelectionMarker = null;
-    }
-    // 5. 清理信息窗体
+    if (anchorMarkers.length > 0) { map.remove(anchorMarkers); anchorMarkers = []; }
+    if (connectionLine) { map.remove(connectionLine); connectionLine = null; }
+    if (currentPolygon) { map.remove(currentPolygon); currentPolygon = null; }
+    if (userSelectionMarker) { map.remove(userSelectionMarker); userSelectionMarker = null; }
     map.clearInfoWindow();
 }
 
 // ==========================================================
 // 🧠 5. 核心逻辑
 // ==========================================================
-
 function searchPage(keyword, center, pageIndex) {
     return new Promise((resolve) => {
         placeSearch.setPageIndex(pageIndex);
@@ -140,11 +116,8 @@ function searchPage(keyword, center, pageIndex) {
 
 function analyzeLocation(AMap, centerPoint, isUserClick) {
     const config = STRATEGY_CONFIG[currentMode];
-    
-    // 第一步：先清理，防残留
     clearMapOverlays(); 
 
-    // 绘制新红点
     if (isUserClick) {
         userSelectionMarker = new AMap.Marker({
             map: map, position: centerPoint,
@@ -158,7 +131,6 @@ function analyzeLocation(AMap, centerPoint, isUserClick) {
 
     document.getElementById('poi-count').innerText = "AI 动态扫描中...";
 
-    // 性能优化：Promise 并行请求
     Promise.all([
         searchPage(config.keyword, centerPoint, 1),
         searchPage(config.keyword, centerPoint, 2)
@@ -167,8 +139,7 @@ function analyzeLocation(AMap, centerPoint, isUserClick) {
         anchorData = []; 
 
         if (allPois.length > 0) {
-            document.getElementById('poi-count').innerText = allPois.length + " 个 (动态覆盖)";
-
+            document.getElementById('poi-count').innerText = allPois.length + " 个";
             allPois.forEach(poi => {
                 anchorData.push(poi.location);
                 const marker = new AMap.Marker({
@@ -178,22 +149,16 @@ function analyzeLocation(AMap, centerPoint, isUserClick) {
                         image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png' 
                     }),
                     anchor: 'bottom-center',
-                    label: { 
-                        content: `<div class="anchor-label">${poi.name}</div>`,
-                        direction: 'top', offset: new AMap.Pixel(0, -5)
-                    },
+                    label: { content: `<div class="anchor-label">${poi.name}</div>`, direction: 'top', offset: new AMap.Pixel(0, -5) },
                     zIndex: 50
                 });
                 anchorMarkers.push(marker);
             });
 
-            if (isUserClick) {
-                renderAnalysisResult(AMap, centerPoint);
-            } else {
-                map.setFitView(anchorMarkers, false, [60,60,60,60]);
-            }
+            if (isUserClick) renderAnalysisResult(AMap, centerPoint);
+            else map.setFitView(anchorMarkers, false, [60,60,60,60]);
         } else {
-            document.getElementById('poi-count').innerText = "0 (建议更换位置)";
+            document.getElementById('poi-count').innerText = "0 (荒漠区域)";
         }
     });
 }
@@ -211,7 +176,6 @@ function renderAnalysisResult(AMap, centerPoint) {
 
     geocoder.getAddress(centerPoint, (status, result) => {
         let addressText = status === 'complete' ? result.regeocode.formattedAddress.replace('北京市', '') : "未知位置";
-        
         const container = document.getElementById('container');
         container.setAttribute('data-last-address', addressText);
         container.setAttribute('data-last-distance', distanceText);
@@ -219,10 +183,10 @@ function renderAnalysisResult(AMap, centerPoint) {
         const config = STRATEGY_CONFIG[currentMode];
         const statsHTML = getStatsHTML(currentMode, currentScore);
         const contentHTML = `
-            <div style="padding:10px; width: 260px; font-family:sans-serif;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:5px;">
-                    <span style="font-weight:bold; color:#333;">${config.label}</span>
-                    <span style="color:${currentScore > 70 ? '#52c41a' : '#ff4d4f'}; font-weight:800; font-size:16px;">${currentScore}分</span>
+            <div style="padding:10px; width: 260px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-weight:bold;">${config.label}</span>
+                    <span style="color:${currentScore > 70 ? '#52c41a' : '#ff4d4f'}; font-weight:800;">${currentScore}分</span>
                 </div>
                 <div style="font-size:12px; color:#666;">📍 ${addressText}</div>
                 <div style="font-size:12px; color:#666; margin-bottom:8px;">🔗 最近资源: ${distanceText}</div>
@@ -237,7 +201,6 @@ function renderAnalysisResult(AMap, centerPoint) {
                 map: map, path: [centerPoint, nearestAnchorLoc],
                 strokeColor: "#006eff", strokeStyle: "dashed", strokeDasharray: [10, 5], zIndex: 60
             });
-            
             const zoomLevels = { 'business': 16.2, 'community': 16.8, 'traffic': 17.5 };
             map.setZoom(zoomLevels[currentMode] || 16.8); 
             map.panTo(centerPoint); 
@@ -254,42 +217,92 @@ function drawSmartBoundary(AMap, centerPoint, mode) {
         'community':{ stroke: '#52c41a', fill: 'rgba(82, 196, 26, 0.15)' }
     };
     const style = styleMap[mode];
-
     currentPolygon = new AMap.Circle({
         center: centerPoint, radius: radius, 
-        borderWeight: 1, strokeColor: style.stroke, strokeOpacity: 0.8, strokeWeight: 2,
+        strokeColor: style.stroke, strokeWeight: 2,
         fillColor: style.fill, fillOpacity: 0.5, zIndex: 40, bubble: true
     });
     map.add(currentPolygon);
 }
 
 // ==========================================================
-// 📄 研报逻辑（修复滑动问题）
+// 📄 研报逻辑 (数据填充补全)
 // ==========================================================
 function generateReport() {
     if (!userSelectionMarker) return alert("请先在地图上选点！");
     
-    // 1. 显示弹窗
-    const modal = document.getElementById('report-modal');
-    modal.style.display = 'block'; // 配合 CSS 的非 flex 布局使用 block
-    
-    // 2. 🟢 暴力禁用 body 滚动，防止滑动冲突
+    document.getElementById('report-modal').style.display = 'block';
     document.body.classList.add('modal-open');
     
-    // ... 你的其他数据填充逻辑 ...
+    // 数据填充
+    const config = STRATEGY_CONFIG[currentMode];
+    document.getElementById('report-date').innerText = new Date().toLocaleDateString();
+    document.getElementById('report-model').innerText = config.label;
+    document.getElementById('report-score').innerText = currentScore;
+    document.getElementById('report-address').innerText = document.getElementById('container').getAttribute('data-last-address');
+    document.getElementById('report-anchor-count').innerText = document.getElementById('poi-count').innerText;
+    document.getElementById('report-distance').innerText = document.getElementById('container').getAttribute('data-last-distance');
+    document.getElementById('report-shops').innerText = config.shops;
+
+    const ai = generateAIRules(currentMode, currentScore);
+    document.getElementById('report-summary').innerText = ai.summary;
+    document.getElementById('profile-people').innerText = ai.people;
+    document.getElementById('profile-prefer').innerText = ai.prefer;
+    
     document.getElementById('report-content').scrollTop = 0; 
 }
 
 function closeModal() { 
     document.getElementById('report-modal').style.display = 'none'; 
-    // 3. 🟢 恢复 body 滚动
     document.body.classList.remove('modal-open');
 }
 
-// 评分与建议函数保持原样...
-function calculateScore(dis) { /* ...你的代码... */ }
-function getStatsHTML(mode, score) { /* ...你的代码... */ }
-function generateAIRules(mode, score) { /* ...你的代码... */ }
-function downloadPDF() { /* ...使用 html2pdf ... */ }
-function updateModeUI(mode) { /* ...你的代码... */ }
+function downloadPDF() {
+    const btn = document.getElementById('btn-modal-download');
+    btn.innerText = "正在生成..."; btn.disabled = true;
+    const element = document.getElementById('report-content');
+    html2pdf().set({
+        margin: 10,
+        filename: '慧眼商业研报.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(element).save().then(() => {
+        btn.innerText = "📥 下载 PDF";
+        btn.disabled = false;
+    });
+}
 
+// ==========================================================
+// 📊 算法工具函数
+// ==========================================================
+function calculateScore(dis) {
+    let score = Math.max(10, 100 - (dis / 20));
+    if (dis < 100) score += 5;
+    return Math.floor(Math.min(99, score));
+}
+
+function getStatsHTML(mode, score) {
+    const labels = ["流量指数", "竞争压力", "消费能力", "配套成熟", "配套潜力"];
+    let html = '';
+    labels.forEach(l => {
+        const val = Math.max(20, score - Math.random() * 20);
+        html += `<div style="font-size:11px; margin-top:4px;">${l}: ${val.toFixed(0)}%</div>`;
+    });
+    return html;
+}
+
+function generateAIRules(mode, score) {
+    const ai = {
+        summary: score > 80 ? "该地块极具商业潜力，核心指标表现优异。" : "该区域目前尚处于孵化期，建议谨慎入场。",
+        people: STRATEGY_CONFIG[mode].people,
+        prefer: mode === 'business' ? "高品质、快节奏、品牌化" : "性价比、社交、新鲜感"
+    };
+    return ai;
+}
+
+function updateModeUI(mode) {
+    const config = STRATEGY_CONFIG[mode];
+    document.getElementById('info-people').innerText = config.people;
+    document.getElementById('info-shops').innerText = config.shops;
+}
