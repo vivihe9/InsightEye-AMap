@@ -54,16 +54,20 @@
             📊 区域锚点: <span id="poi-count" style="color: #006eff; font-weight: bold;">扫描中...</span>
         </div>
     </div>
-
     <div id="report-modal" class="modal-overlay">
-        <div class="modal-wrapper">
-            <div class="modal-header-bar">
-                <span class="modal-title">✨ 商业计划书预览</span>
-                <div class="modal-actions">
-                    <button id="btn-modal-close" class="btn-ghost">关闭</button>
-                    <button id="btn-modal-download" class="btn-primary">📥 下载 PDF 文件</button>
-                </div>
+    <div class="modal-wrapper">
+        <div class="modal-header-bar">
+            <span class="modal-title">商业价值深度研报</span>
+            <div class="btn-group">
+                <button id="btn-modal-download" class="btn-primary">📥 下载 PDF</button>
+                <button id="btn-modal-close" class="btn-ghost">关闭</button>
             </div>
+        </div>
+        <div id="report-content" class="report-container">
+            </div>
+    </div>
+</div>
+
 
             <div id="report-content" class="report-container">
                 <div class="report-header">
@@ -117,4 +121,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
